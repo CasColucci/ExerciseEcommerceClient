@@ -1,4 +1,4 @@
-﻿@model EcommerceClient.Models.CreateProduct
+﻿@model EcommerceClient.Models.Product
 <div class="container p-4 border">
     <div class="row">
         <div class="col">
@@ -12,8 +12,10 @@
         <input class="form-control" type="text" placeholder="Description of product" asp-for="Description" />
         <label class="mt-4">Price</label>
         <input class="form-control" type="number" placeholder="Price of product" asp-for="Price" step="0.01" />
-        <label class="mt-4">Category</label>
-        @Html.DropDownListFor(model => model.Categories)
+        <label class="mt-4" >Category</label>
+        <br />
+        @Html.DropDownList("EnumDropDown", ViewBag.EnumList as SelectList)
+        <br />
 
         <a class="btn btn-primary mt-4" type="submit">Create Product</a>
     </form>

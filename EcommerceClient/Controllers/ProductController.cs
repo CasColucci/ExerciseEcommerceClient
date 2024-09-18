@@ -37,12 +37,14 @@ namespace EcommerceClient.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var productCategories = Enum.GetValues(typeof(Category)).Cast<Category>().Select(v => new SelectListItem
-            {
-                Text = v.ToString(),
-                Value = ((int)v).ToString()
-            }).ToList();
-            return View(productCategories);
+            var enumData = from Category c in Enum.GetValues(typeof(Category))
+                           select new
+                           {
+                               ID = (int)c,
+                               Name = c.ToString()
+                           };
+            ViewBag.EnumList = new SelectList(enumData, "ID", "Name");
+            return View();
         }
 
         public async Task<IActionResult> CreateProduct(Product product)
