@@ -8,14 +8,15 @@ namespace EcommerceClient.Controllers
     public class ProductController : Controller
     {
         private string baseUrl = "https://localhost:7213/";
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Products()
         {
             List<Product> products = new List<Product>();
-            using (var _httpClient = new HttpClient()) 
-            { 
+            using (var _httpClient = new HttpClient())
+            {
                 _httpClient.BaseAddress = new Uri(baseUrl + "api/");
                 _httpClient.DefaultRequestHeaders.Accept.Clear();
                 _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
 
                 HttpResponseMessage getData = await _httpClient.GetAsync("GetAllProducts");
 
@@ -29,7 +30,7 @@ namespace EcommerceClient.Controllers
                     return View("ErrorPage");
                 }
             }
-            return View(products);
+            return View();
         }
 
         public async Task<IActionResult> Create()
