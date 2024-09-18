@@ -1,5 +1,6 @@
 ﻿using EcommerceClient.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
 
@@ -8,7 +9,8 @@ namespace EcommerceClient.Controllers
     public class ProductController : Controller
     {
         private string baseUrl = "https://localhost:7213/";
-        public async Task<IActionResult> Products()
+
+    public async Task<IActionResult> Products()
         {
             List<Product> products = new List<Product>();
             using (var _httpClient = new HttpClient())
@@ -35,7 +37,12 @@ namespace EcommerceClient.Controllers
 
         public async Task<IActionResult> Create()
         {
-            return View();
+            var productCategories = Enum.GetValues(typeof(Category)).Cast<Category>().Select(v => new SelectListItem
+            {
+                Text = v.ToString(),
+                Value = ((int)v).ToString()
+            }).ToList();
+            return View(productCategories);
         }
 
         public async Task<IActionResult> CreateProduct(Product product)

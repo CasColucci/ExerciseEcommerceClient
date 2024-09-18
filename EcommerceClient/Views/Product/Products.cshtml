@@ -1,1 +1,41 @@
-﻿<h1>TEST</h1>
+﻿@model List<Product>
+<div class="container p-4 border">
+    <div class="row pb-2">
+        <div class="col">
+            <h1 class="text-primary">Products</h1>
+        </div>
+        <div class="col text-end p1-1">
+            <a asp-controller="Products" asp-action="AddProduct" class="btn btn-primary">New Product</a>
+        </div>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Price</th>
+                <th>Category</th>
+                <th>Created Date</th>
+                <th>Updated Date</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach(var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@item.Description</td>
+                    <td>@item.Price</td>
+                    <td>@item.Category</td>
+                    <td>@item.CreatedDate</td>
+                    <td>@item.UpdatedDate</td>
+                    <a asp-controller="Products" asp-action="Delete" asp-route-Id="@item.Id" class="btn btn-primary">Delete</a>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
