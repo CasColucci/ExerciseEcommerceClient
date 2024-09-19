@@ -106,20 +106,34 @@ namespace EcommerceClient.Controllers
         public async Task<IActionResult> DeleteProduct(int id)
 
         {
+            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/DeleteProduct" + id).Result;
+            if(response.IsSuccessStatusCode)
+            {
+                TempData["successMessage"] = "Product deleted successfully!";
+                return RedirectToAction("Products");
+            }
             using (var _httpClient = new HttpClient())
             {
-                _httpClient.BaseAddress = new Uri(baseUrl + "/DeleteProduct");
-                _httpClient.DefaultRequestHeaders.Accept.Clear();
-                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-                HttpResponseMessage getData = await _httpClient.DeleteAsync("?id=" + id);
-
-                if (getData.IsSuccessStatusCode)
+                try
                 {
-                    return RedirectToAction("Index");
+                    _httpClient.BaseAddress = new Uri(baseUrl + "/DeleteProduct");
+                    _httpClient.DefaultRequestHeaders.Accept.Clear();
+                    _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+                    HttpResponseMessage getData = await _httpClient.DeleteAsync("?id=" + id);
+
+                    if (getData.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        return View("ErrorPage");
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
+                    TempData["errorMessage"] = ex.Message;
                     return View("ErrorPage");
                 }
             }
