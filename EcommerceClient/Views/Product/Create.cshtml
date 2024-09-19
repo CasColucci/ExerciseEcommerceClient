@@ -16,6 +16,8 @@
         <br />
         @Html.DropDownList("EnumDropDown", ViewBag.EnumList as SelectList)
         <br />
+        <label class="mt-4">Created Date</label>
+        <input class="form-control" type="date" asp-for="CreatedDate" />
 
         <a class="btn btn-primary mt-4" type="submit">Create Product</a>
     </form>

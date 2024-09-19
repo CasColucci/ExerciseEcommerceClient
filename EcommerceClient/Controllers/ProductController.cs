@@ -9,30 +9,24 @@ namespace EcommerceClient.Controllers
     public class ProductController : Controller
     {
         private string baseUrl = "https://localhost:7213/";
+        private readonly HttpClient _client;
 
-    public async Task<IActionResult> Products()
+        public ProductController()
+        {
+            _client = new HttpClient();
+            _client.BaseAddress = new Uri(baseUrl);
+        }
+
+        public async Task<IActionResult> Products()
         {
             List<Product> products = new List<Product>();
-            using (var _httpClient = new HttpClient())
+            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress).Result;
+            if(response.IsSuccessStatusCode)
             {
-                _httpClient.BaseAddress = new Uri(baseUrl + "api/");
-                _httpClient.DefaultRequestHeaders.Accept.Clear();
-                _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-
-                HttpResponseMessage getData = await _httpClient.GetAsync("GetAllProducts");
-
-                if (getData.IsSuccessStatusCode)
-                {
-                    string result = getData.Content.ReadAsStringAsync().Result;
-                    products = JsonConvert.DeserializeObject<List<Product>>(result);
-                }
-                else
-                {
-                    return View("ErrorPage");
-                }
+                string data = response.Content.ReadAsStringAsync().Result;
+                products = JsonConvert.DeserializeObject<List<Product>>(data);
             }
-            return View();
+            return View(products);
         }
 
         public async Task<IActionResult> Create()
