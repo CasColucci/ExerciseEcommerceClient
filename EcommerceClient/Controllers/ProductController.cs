@@ -23,12 +23,47 @@ namespace EcommerceClient.Controllers
         {
             List<Product> products = new List<Product>();
             HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/GetAllProducts").Result;
-            if(response.IsSuccessStatusCode)
+            if (response.IsSuccessStatusCode)
             {
                 string data = response.Content.ReadAsStringAsync().Result;
                 products = JsonConvert.DeserializeObject<List<Product>>(data);
             }
             return View(products);
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetProductById(int id)
+        {
+            Product product;
+            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/GetProductById/" + id).Result;
+            if (response.IsSuccessStatusCode)
+            {
+                product = JsonConvert.DeserializeObject<Product>(response.Content.ReadAsStringAsync().Result);
+                return View(product);
+            }
+            return View("ErrorPage");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateProduct(Product product)
+        {
+            try
+            {
+                string data = JsonConvert.SerializeObject(product);
+                StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = _client.PutAsync(_client.BaseAddress + "/UpdateProduct", content).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Product updated successfully!";
+                    return RedirectToAction("Products");
+                }
+                return View("ErrorPage");
+            }
+            catch (Exception ex)
+            {
+                TempData["errorMessage"] = ex.Message;
+                return View("ErrorPage");
+            }
         }
 
         [HttpGet]
@@ -69,6 +104,7 @@ namespace EcommerceClient.Controllers
 
         [HttpPost]
         public async Task<IActionResult> DeleteProduct(int id)
+
         {
             using (var _httpClient = new HttpClient())
             {

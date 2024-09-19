@@ -1,0 +1,18 @@
+﻿@model EcommerceClient.Models.Product
+<div class="container p-4 border">
+    <div class="row">
+        <div class="col">
+            <h1 class="text-primary">@ViewData["Name"]</h1>
+        </div>
+    </div>
+    <form asp-action="Edit">
+        <label>Name</label>
+        <input class="form-control" type="text" placeholder="Name of product" asp-for="Name" required />
+        <label class="mt-4">Description</label>
+        <input class="form-control" type="text" placeholder="Description of product" asp-for="Description" required />
+        <label class="mt-4">Price</label>
+        <input class="form-control" type="number" placeholder="Price of product" asp-for="Price" step="0.01" required />
+
+        <input class="btn btn-primary mt-4" type="submit" value="UpdateProduct"></input>
+    </form>
+</div>
