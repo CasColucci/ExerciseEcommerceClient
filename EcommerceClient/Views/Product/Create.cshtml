@@ -13,11 +13,7 @@
         <label class="mt-4">Price</label>
         <input class="form-control" type="number" placeholder="Price of product" asp-for="Price" step="0.01" />
         <label class="mt-4" >Category</label>
-        <br />
-        @Html.DropDownList("EnumDropDown", ViewBag.EnumList as SelectList)
-        <br />
-        <label class="mt-4">Created Date</label>
-        <input class="form-control" type="date" asp-for="CreatedDate" />
+        @Html.DropDownList("EnumDropDown", ViewBag.EnumList as SelectList, new {@class = "form-control"})
 
         <a class="btn btn-primary mt-4" type="submit">Create Product</a>
     </form>

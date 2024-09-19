@@ -48,6 +48,7 @@ namespace EcommerceClient.Controllers
                 _httpClient.BaseAddress = new Uri(baseUrl + "api/");
                 _httpClient.DefaultRequestHeaders.Accept.Clear();
                 _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                product.CreatedDate = DateTime.Now;
 
                 HttpResponseMessage getData = await _httpClient.PutAsJsonAsync("", product);
 
