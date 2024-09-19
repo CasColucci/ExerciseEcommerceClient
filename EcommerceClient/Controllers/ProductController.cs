@@ -3,12 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace EcommerceClient.Controllers
 {
     public class ProductController : Controller
     {
-        private string baseUrl = "https://localhost:7213/api";
+        private string baseUrl = "https://localhost:7213/api/Product";
         private readonly HttpClient _client;
 
         public ProductController()
@@ -21,7 +22,7 @@ namespace EcommerceClient.Controllers
         public async Task<IActionResult> Products()
         {
             List<Product> products = new List<Product>();
-            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/Product/GetAllProducts").Result;
+            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/GetAllProducts").Result;
             if(response.IsSuccessStatusCode)
             {
                 string data = response.Content.ReadAsStringAsync().Result;
@@ -30,6 +31,7 @@ namespace EcommerceClient.Controllers
             return View(products);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
             var enumData = from Category c in Enum.GetValues(typeof(Category))
@@ -42,16 +44,39 @@ namespace EcommerceClient.Controllers
             return View();
         }
 
+        [HttpPost]
         public async Task<IActionResult> CreateProduct(Product product)
+        {
+            try
+            {
+                string data = JsonConvert.SerializeObject(product);
+                StringContent content = new StringContent(data, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = _client.PostAsync(_client.BaseAddress + "/CreateProduct", content).Result;
+                if (response.IsSuccessStatusCode)
+                {
+                    TempData["successMessage"] = "Product created successfully!";
+                    return RedirectToAction("Products");
+                }
+                return View("ErrorPage");
+            }
+            catch (Exception ex) 
+            { 
+                TempData["errorMessage"] = ex.Message;
+                return View("ErrorPage");
+            }
+
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DeleteProduct(int id)
         {
             using (var _httpClient = new HttpClient())
             {
-                _httpClient.BaseAddress = new Uri(baseUrl);
+                _httpClient.BaseAddress = new Uri(baseUrl + "/DeleteProduct");
                 _httpClient.DefaultRequestHeaders.Accept.Clear();
                 _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                product.CreatedDate = DateTime.Now;
 
-                HttpResponseMessage getData = await _httpClient.PutAsJsonAsync("", product);
+                HttpResponseMessage getData = await _httpClient.DeleteAsync("?id=" + id);
 
                 if (getData.IsSuccessStatusCode)
                 {
