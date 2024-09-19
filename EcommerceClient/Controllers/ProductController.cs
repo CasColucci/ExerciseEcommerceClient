@@ -8,7 +8,7 @@ namespace EcommerceClient.Controllers
 {
     public class ProductController : Controller
     {
-        private string baseUrl = "https://localhost:7213/";
+        private string baseUrl = "https://localhost:7213/api";
         private readonly HttpClient _client;
 
         public ProductController()
@@ -17,10 +17,11 @@ namespace EcommerceClient.Controllers
             _client.BaseAddress = new Uri(baseUrl);
         }
 
+        [HttpGet]
         public async Task<IActionResult> Products()
         {
             List<Product> products = new List<Product>();
-            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress).Result;
+            HttpResponseMessage response = _client.GetAsync(_client.BaseAddress + "/Product/GetAllProducts").Result;
             if(response.IsSuccessStatusCode)
             {
                 string data = response.Content.ReadAsStringAsync().Result;
@@ -45,7 +46,7 @@ namespace EcommerceClient.Controllers
         {
             using (var _httpClient = new HttpClient())
             {
-                _httpClient.BaseAddress = new Uri(baseUrl + "api/");
+                _httpClient.BaseAddress = new Uri(baseUrl);
                 _httpClient.DefaultRequestHeaders.Accept.Clear();
                 _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
                 product.CreatedDate = DateTime.Now;

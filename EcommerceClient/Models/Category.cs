@@ -2,7 +2,7 @@
 {
     public enum Category
     {
-        Electronics,
+        Electronics = 1,
         Clothing,
         Home,
         Kitchen,
